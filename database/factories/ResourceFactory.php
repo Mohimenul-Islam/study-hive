@@ -20,7 +20,7 @@ class ResourceFactory extends Factory
             'user_id' => \App\Models\User::all()->random()->id,
             'title' => $this->faker->sentence(3),
             'description' => $this->faker->paragraph(2),
-            'course_code' => $this->faker->regexify('[A-Z]{3}[0-9]{3}'), // e.g., CSE101, MAT201
+            'course_name' => $this->faker->words(2, true) . ' ' . $this->faker->regexify('[0-9]{3}'), // e.g., Computer Science 101, Mathematics 201
             'file_path' => 'resources/' . $this->faker->uuid() . '.' . $this->faker->randomElement(['pdf', 'doc', 'docx', 'ppt', 'pptx']),
         ];
     }

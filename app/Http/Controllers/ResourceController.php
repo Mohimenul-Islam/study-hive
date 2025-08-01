@@ -35,7 +35,7 @@ class ResourceController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'course_code' => 'required|string|max:255',
+            'course_name' => 'required|string|max:255',
             'file' => 'required|file|mimes:pdf,pptx,jpg,png', // Only allow these file types
         ]);
 
@@ -47,7 +47,7 @@ class ResourceController extends Controller
             'user_id' => Auth::id(), // Get the ID of the currently logged-in user
             'title' => $request->title,
             'description' => $request->description,
-            'course_code' => $request->course_code,
+            'course_name' => $request->course_name,
             'file_path' => $filePath,
         ]);
 

@@ -14,19 +14,22 @@
 
                         <div>
                             <x-input-label for="title" :value="__('Title')" />
-                            <x-text-input id="title" class="block mt-1 w-full" type="text" name="title" :value="old('title')" required autofocus />
+                            <x-text-input id="title" class="block mt-1 w-full" type="text" name="title"
+                                :value="old('title')" required autofocus />
                             <x-input-error :messages="$errors->get('title')" class="mt-2" />
                         </div>
 
                         <div class="mt-4">
-                            <x-input-label for="course_code" :value="__('Course Code')" />
-                            <x-text-input id="course_code" class="block mt-1 w-full" type="text" name="course_code" :value="old('course_code')" required />
-                            <x-input-error :messages="$errors->get('course_code')" class="mt-2" />
+                            <x-input-label for="course_name" :value="__('Course Name')" />
+                            <x-text-input id="course_name" class="block mt-1 w-full" type="text" name="course_name"
+                                :value="old('course_name')" required />
+                            <x-input-error :messages="$errors->get('course_name')" class="mt-2" />
                         </div>
 
                         <div class="mt-4">
                             <x-input-label for="description" :value="__('Description')" />
-                            <textarea id="description" name="description" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">{{ old('description') }}</textarea>
+                            <textarea id="description" name="description"
+                                class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">{{ old('description') }}</textarea>
                             <x-input-error :messages="$errors->get('description')" class="mt-2" />
                         </div>
 

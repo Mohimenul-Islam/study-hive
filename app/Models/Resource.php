@@ -19,7 +19,7 @@ class Resource extends Model
         'user_id',
         'title',
         'description',
-        'course_code',
+        'course_name',
         'file_path',
     ];
 
