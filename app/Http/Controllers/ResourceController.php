@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Resource; 
+use App\Models\Resource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,7 +13,7 @@ class ResourceController extends Controller
      */
     public function index()
     {
-        $resources = Resource::latest()->get(); // Get all resources, newest first
+        $resources = Resource::latest()->paginate(10); // Get resources with pagination, newest first
 
         return view('dashboard', ['resources' => $resources]);
     }
