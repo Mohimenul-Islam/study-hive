@@ -19,6 +19,86 @@
 
     <div class="py-6 sm:py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Search and Filter Form -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 mb-6">
+                <form method="GET" action="{{ route('dashboard') }}" class="space-y-4 sm:space-y-0 sm:flex sm:items-end sm:space-x-4">
+                    <!-- Search Input -->
+                    <div class="flex-1">
+                        <label for="search" class="block text-sm font-medium text-gray-700 mb-2">
+                            Search Resources
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                            </div>
+                            <input type="text" 
+                                   id="search" 
+                                   name="search" 
+                                   value="{{ $currentSearch }}"
+                                   class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                   placeholder="Search by title or description...">
+                        </div>
+                    </div>
+
+                    <!-- Course Filter Dropdown -->
+                    <div class="sm:w-64">
+                        <label for="course_name" class="block text-sm font-medium text-gray-700 mb-2">
+                            Filter by Course
+                        </label>
+                        <select id="course_name" 
+                                name="course_name" 
+                                class="block w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            <option value="">All Courses</option>
+                            @foreach ($courseNames as $courseName)
+                                <option value="{{ $courseName }}" {{ $currentCourse == $courseName ? 'selected' : '' }}>
+                                    {{ $courseName }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex space-x-3 sm:flex-shrink-0">
+                        <button type="submit" 
+                                class="inline-flex items-center px-4 py-2.5 bg-blue-600 border border-transparent rounded-lg font-medium text-sm text-white hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                            Search
+                        </button>
+                        @if ($currentSearch || $currentCourse)
+                            <a href="{{ route('dashboard') }}" 
+                               class="inline-flex items-center px-4 py-2.5 bg-gray-100 border border-gray-300 rounded-lg font-medium text-sm text-gray-700 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                                Clear
+                            </a>
+                        @endif
+                    </div>
+                </form>
+                
+                <!-- Search Results Info -->
+                @if ($currentSearch || $currentCourse)
+                    <div class="mt-4 pt-4 border-t border-gray-100">
+                        <div class="flex items-center justify-between">
+                            <div class="text-sm text-gray-600">
+                                @if ($currentSearch && $currentCourse)
+                                    Showing results for "<strong>{{ $currentSearch }}</strong>" in <strong>{{ $currentCourse }}</strong>
+                                @elseif ($currentSearch)
+                                    Showing results for "<strong>{{ $currentSearch }}</strong>"
+                                @elseif ($currentCourse)
+                                    Showing results for course: <strong>{{ $currentCourse }}</strong>
+                                @endif
+                                <span class="ml-2 text-gray-500">({{ $resources->total() }} {{ Str::plural('result', $resources->total()) }})</span>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            </div>
+
             @if (session('status'))
                 <div class="mb-6 bg-green-50 border-l-4 border-green-400 p-4 rounded-r-lg shadow-sm">
                     <div class="flex">
@@ -174,4 +254,24 @@
             overflow: hidden;
         }
     </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const courseSelect = document.getElementById('course_name');
+            const searchForm = courseSelect.closest('form');
+            
+            // Auto-submit form when course is changed
+            courseSelect.addEventListener('change', function() {
+                searchForm.submit();
+            });
+
+            // Optional: Submit form on Enter key press in search input
+            const searchInput = document.getElementById('search');
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchForm.submit();
+                }
+            });
+        });
+    </script>
 </x-app-layout>

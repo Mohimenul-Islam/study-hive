@@ -11,11 +11,38 @@ class ResourceController extends Controller
     /**
      * Show the application dashboard with all resources.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $resources = Resource::latest()->paginate(10); // Get resources with pagination, newest first
+        $query = Resource::with('user')->latest();
 
-        return view('dashboard', ['resources' => $resources]);
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'LIKE', "%{$search}%")
+                    ->orWhere('description', 'LIKE', "%{$search}%");
+            });
+        }
+
+        // Course filter functionality
+        if ($request->filled('course_name')) {
+            $query->where('course_name', $request->get('course_name'));
+        }
+
+        $resources = $query->paginate(10)->appends($request->query());
+
+        // Get unique course names for the dropdown
+        $courseNames = Resource::select('course_name')
+            ->distinct()
+            ->orderBy('course_name')
+            ->pluck('course_name');
+
+        return view('dashboard', [
+            'resources' => $resources,
+            'courseNames' => $courseNames,
+            'currentSearch' => $request->get('search', ''),
+            'currentCourse' => $request->get('course_name', ''),
+        ]);
     }
 
     /**
