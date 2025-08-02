@@ -37,7 +37,7 @@ class ResourceController extends Controller
             ->orderBy('course_name')
             ->pluck('course_name');
 
-        return view('dashboard', [
+        return view('resources.index', [
             'resources' => $resources,
             'courseNames' => $courseNames,
             'currentSearch' => $request->get('search', ''),

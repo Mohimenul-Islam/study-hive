@@ -21,7 +21,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Search and Filter Form -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 mb-6">
-                <form method="GET" action="{{ route('dashboard') }}" class="space-y-4 sm:space-y-0 sm:flex sm:items-end sm:space-x-4">
+                <form method="GET" action="{{ route('home') }}" class="space-y-4 sm:space-y-0 sm:flex sm:items-end sm:space-x-4">
                     <!-- Search Input -->
                     <div class="flex-1">
                         <label for="search" class="block text-sm font-medium text-gray-700 mb-2">
