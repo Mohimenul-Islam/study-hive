@@ -13,7 +13,9 @@ class ResourceController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Resource::with('user')->latest();
+        $query = Resource::with(['user', 'upvotes', 'downvotes'])
+            ->orderByDesc('upvote_count')
+            ->orderByDesc('created_at');
 
         // Search functionality
         if ($request->filled('search')) {
@@ -79,6 +81,6 @@ class ResourceController extends Controller
         ]);
 
         // 4. Redirect the user back to the dashboard with a success message
-        return redirect()->route('dashboard')->with('status', 'Resource uploaded successfully!');
+        return redirect()->route('home')->with('status', 'Resource uploaded successfully!');
     }
 }

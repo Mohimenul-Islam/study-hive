@@ -69,7 +69,7 @@
                             Search
                         </button>
                         @if ($currentSearch || $currentCourse)
-                            <a href="{{ route('dashboard') }}" 
+                            <a href="{{ route('home') }}" 
                                class="inline-flex items-center px-4 py-2.5 bg-gray-100 border border-gray-300 rounded-lg font-medium text-sm text-gray-700 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -144,13 +144,62 @@
                                 </h2>
 
                                 <!-- Course name badge -->
-                                <div class="flex items-center space-x-2">
+                                <div class="flex items-center justify-between">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                         <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                                         </svg>
                                         {{ $resource->course_name }}
                                     </span>
+
+                                    <!-- Vote buttons -->
+                                    @auth
+                                        <div class="flex items-center space-x-1" data-resource-id="{{ $resource->id }}">
+                                            <!-- Upvote button -->
+                                            <button type="button" 
+                                                    class="vote-btn upvote-btn flex items-center space-x-1 px-2 py-1 rounded-md text-xs font-medium transition-colors duration-200 {{ $resource->user_vote === 'up' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600 hover:bg-green-50 hover:text-green-600' }}"
+                                                    data-vote-type="up">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"></path>
+                                                </svg>
+                                                <span class="upvotes-count">{{ $resource->upvotes->count() }}</span>
+                                            </button>
+
+                                            <!-- Vote score -->
+                                            <span class="vote-score px-2 py-1 text-xs font-medium text-gray-700">
+                                                {{ $resource->vote_score }}
+                                            </span>
+
+                                            <!-- Downvote button -->
+                                            <button type="button" 
+                                                    class="vote-btn downvote-btn flex items-center space-x-1 px-2 py-1 rounded-md text-xs font-medium transition-colors duration-200 {{ $resource->user_vote === 'down' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600 hover:bg-red-50 hover:text-red-600' }}"
+                                                    data-vote-type="down">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"></path>
+                                                </svg>
+                                                <span class="downvotes-count">{{ $resource->downvotes->count() }}</span>
+                                            </button>
+                                        </div>
+                                    @else
+                                        <!-- Show vote counts for guests -->
+                                        <div class="flex items-center space-x-1">
+                                            <div class="flex items-center space-x-1 px-2 py-1 text-xs text-gray-500">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"></path>
+                                                </svg>
+                                                <span>{{ $resource->upvotes->count() }}</span>
+                                            </div>
+                                            <span class="px-2 py-1 text-xs font-medium text-gray-700">
+                                                {{ $resource->vote_score }}
+                                            </span>
+                                            <div class="flex items-center space-x-1 px-2 py-1 text-xs text-gray-500">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"></path>
+                                                </svg>
+                                                <span>{{ $resource->downvotes->count() }}</span>
+                                            </div>
+                                        </div>
+                                    @endauth
                                 </div>
 
                                 <!-- Description (truncated) -->
@@ -271,6 +320,57 @@
                 if (e.key === 'Enter') {
                     searchForm.submit();
                 }
+            });
+
+            // Voting functionality
+            document.querySelectorAll('.vote-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const resourceId = this.closest('[data-resource-id]').dataset.resourceId;
+                    const voteType = this.dataset.voteType;
+                    
+                    // Disable button during request
+                    this.disabled = true;
+                    
+                    fetch(`/resources/${resourceId}/vote`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            vote_type: voteType
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const container = this.closest('[data-resource-id]');
+                            const upvoteBtn = container.querySelector('.upvote-btn');
+                            const downvoteBtn = container.querySelector('.downvote-btn');
+                            const voteScore = container.querySelector('.vote-score');
+                            const upvotesCount = container.querySelector('.upvotes-count');
+                            const downvotesCount = container.querySelector('.downvotes-count');
+                            
+                            // Update counts
+                            upvotesCount.textContent = data.upvotes_count;
+                            downvotesCount.textContent = data.downvotes_count;
+                            voteScore.textContent = data.vote_score;
+                            
+                            // Update button states
+                            upvoteBtn.className = `vote-btn upvote-btn flex items-center space-x-1 px-2 py-1 rounded-md text-xs font-medium transition-colors duration-200 ${data.user_vote === 'up' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600 hover:bg-green-50 hover:text-green-600'}`;
+                            
+                            downvoteBtn.className = `vote-btn downvote-btn flex items-center space-x-1 px-2 py-1 rounded-md text-xs font-medium transition-colors duration-200 ${data.user_vote === 'down' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600 hover:bg-red-50 hover:text-red-600'}`;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while voting. Please try again.');
+                    })
+                    .finally(() => {
+                        this.disabled = false;
+                    });
+                });
             });
         });
     </script>

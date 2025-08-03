@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->text('description');
             $table->string('course_name');
             $table->string('file_path'); // This will store the location of the uploaded file
+            $table->integer('upvote_count')->default(0); // Cache upvote count for performance
             $table->timestamps();
         });
     }
