@@ -56,6 +56,23 @@ class ResourceController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     */
+    public function show(Resource $resource)
+    {
+        $resource->load([
+            'user',
+            'upvotes',
+            'downvotes',
+            'parentComments.user',
+            'parentComments.replies.user',
+            'parentComments.replies.replies.user'
+        ]);
+
+        return view('resources.show', compact('resource'));
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)

@@ -42,6 +42,22 @@ class Resource extends Model
     }
 
     /**
+     * Get the comments for the resource.
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * Get only parent comments (not replies) for the resource.
+     */
+    public function parentComments(): HasMany
+    {
+        return $this->hasMany(Comment::class)->parentComments()->with(['user', 'replies']);
+    }
+
+    /**
      * Get the upvotes for the resource.
      */
     public function upvotes(): HasMany

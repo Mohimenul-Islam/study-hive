@@ -243,7 +243,7 @@
                                                     </p>
                                                 </div>
                                             </div>
-                                            <div class="flex-shrink-0">
+                                            <div class="flex items-center space-x-2">
                                                 <a href="{{ asset('storage/' . $resource->file_path) }}" 
                                                     target="_blank"
                                                     class="inline-flex items-center px-3 py-1.5 bg-blue-50 text-blue-700 text-xs font-medium rounded-md hover:bg-blue-100 transition-colors">
@@ -255,6 +255,26 @@
                                             </div>
                                         </div>
                                     @endif
+                                    
+                                    <!-- View Details and Comments Count -->
+                                    <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+                                        <div class="flex items-center space-x-4 text-xs text-gray-500">
+                                            <span class="flex items-center space-x-1">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                                </svg>
+                                                <span>{{ $resource->comments->count() }} comments</span>
+                                            </span>
+                                        </div>
+                                        <a href="{{ route('resources.show', $resource) }}" 
+                                           class="inline-flex items-center px-3 py-1.5 bg-gray-100 text-gray-700 text-xs font-medium rounded-md hover:bg-gray-200 transition-colors">
+                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                            </svg>
+                                            View Details
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
