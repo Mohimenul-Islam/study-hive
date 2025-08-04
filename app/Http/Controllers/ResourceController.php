@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Resource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ResourceController extends Controller
 {
@@ -99,5 +100,80 @@ class ResourceController extends Controller
 
         // 4. Redirect the user back to the dashboard with a success message
         return redirect()->route('home')->with('status', 'Resource uploaded successfully!');
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Resource $resource)
+    {
+        // Check if the user owns this resource
+        if ($resource->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        return view('resources.edit', compact('resource'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Resource $resource)
+    {
+        // Check if the user owns this resource
+        if ($resource->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // Validate the incoming data
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'course_name' => 'required|string|max:255',
+            'file' => 'nullable|file|mimes:pdf,pptx,jpg,png', // File is optional on update
+        ]);
+
+        // Handle file upload if a new file is provided
+        $updateData = [
+            'title' => $request->title,
+            'description' => $request->description,
+            'course_name' => $request->course_name,
+        ];
+
+        if ($request->hasFile('file')) {
+            // Delete old file if it exists
+            if ($resource->file_path && Storage::disk('public')->exists($resource->file_path)) {
+                Storage::disk('public')->delete($resource->file_path);
+            }
+
+            // Store new file
+            $updateData['file_path'] = $request->file('file')->store('resources', 'public');
+        }
+
+        // Update the resource
+        $resource->update($updateData);
+
+        return redirect()->route('dashboard.index')->with('status', 'Resource updated successfully!');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Resource $resource)
+    {
+        // Check if the user owns this resource
+        if ($resource->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // Delete the file from storage
+        if ($resource->file_path && Storage::disk('public')->exists($resource->file_path)) {
+            Storage::disk('public')->delete($resource->file_path);
+        }
+
+        // Delete the resource
+        $resource->delete();
+
+        return redirect()->route('dashboard.index')->with('status', 'Resource deleted successfully!');
     }
 }
