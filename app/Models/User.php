@@ -23,6 +23,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'department',
+        'contribution_point',
     ];
 
     /**
@@ -54,5 +55,22 @@ class User extends Authenticatable implements MustVerifyEmail
     public function votes(): HasMany
     {
         return $this->hasMany(Vote::class);
+    }
+
+    /**
+     * Get the resources for the user.
+     */
+    public function resources(): HasMany
+    {
+        return $this->hasMany(Resource::class);
+    }
+
+    /**
+     * Update the user's contribution points based on upvotes received.
+     */
+    public function updateContributionPoints(): void
+    {
+        $contributionPoints = $this->resources()->sum('upvote_count');
+        $this->update(['contribution_point' => $contributionPoints]);
     }
 }

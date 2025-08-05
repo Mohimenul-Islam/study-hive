@@ -5,9 +5,11 @@ use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\VoteController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LeaderboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [ResourceController::class, 'index'])->name('home');
+Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard.index');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Profile routes

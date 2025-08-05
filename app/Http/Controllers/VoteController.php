@@ -54,6 +54,9 @@ class VoteController extends Controller
         // Update the cached upvote count
         $resource->updateUpvoteCount();
 
+        // Update the resource owner's contribution points
+        $resource->user->updateContributionPoints();
+
         // Return JSON response for AJAX requests
         if ($request->expectsJson()) {
             $resource->load(['upvotes', 'downvotes']);
