@@ -41,15 +41,16 @@
                                 </thead>
                                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     @foreach($users as $index => $user)
-                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
+                                            onclick="window.location.href='{{ route('profile.show', $user) }}'">
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <div class="flex items-center">
                                                     @if($index + 1 + ($users->currentPage() - 1) * $users->perPage() <= 3)
                                                         <span class="inline-flex items-center justify-center w-8 h-8 rounded-full text-white font-bold
-                                                                        @if($index + 1 + ($users->currentPage() - 1) * $users->perPage() == 1) bg-yellow-500
-                                                                        @elseif($index + 1 + ($users->currentPage() - 1) * $users->perPage() == 2) bg-gray-400
-                                                                        @else bg-orange-600
-                                                                        @endif">
+                                                                                    @if($index + 1 + ($users->currentPage() - 1) * $users->perPage() == 1) bg-yellow-500
+                                                                                    @elseif($index + 1 + ($users->currentPage() - 1) * $users->perPage() == 2) bg-gray-400
+                                                                                    @else bg-orange-600
+                                                                                    @endif">
                                                             {{ $index + 1 + ($users->currentPage() - 1) * $users->perPage() }}
                                                         </span>
                                                     @else
@@ -60,8 +61,11 @@
                                                 </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                    {{ $user->name }}
+                                                <div class="text-sm font-medium">
+                                                    <span
+                                                        class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 font-semibold">
+                                                        {{ $user->name }}
+                                                    </span>
                                                 </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
