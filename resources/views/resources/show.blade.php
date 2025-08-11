@@ -140,12 +140,12 @@
 
                         <!-- File Display -->
                         <div class="pt-4 border-t border-gray-100">
-                            @if(in_array(pathinfo($resource->file_path, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif']))
+                            @if($resource->file_path && in_array(pathinfo($resource->file_path, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif']))
                                 <div class="text-center">
                                     <img src="{{ asset('storage/' . $resource->file_path) }}" alt="{{ $resource->title }}"
                                         class="rounded-lg max-w-full max-h-96 mx-auto shadow-md">
                                 </div>
-                            @else
+                            @elseif($resource->file_path)
                                 <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                                     <div class="flex items-center space-x-4">
                                         <div class="flex-shrink-0">
@@ -190,6 +190,19 @@
                                         </svg>
                                         Download File
                                     </a>
+                                </div>
+                            @else
+                                <div class="flex items-center justify-center p-6 bg-gray-50 rounded-lg">
+                                    <div class="text-center">
+                                        <svg class="w-12 h-12 text-gray-400 mx-auto mb-2" fill="currentColor"
+                                            viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                                                clip-rule="evenodd"></path>
+                                        </svg>
+                                        <p class="text-sm text-gray-500 font-medium">No file attached</p>
+                                        <p class="text-xs text-gray-400">This resource contains text-only content</p>
+                                    </div>
                                 </div>
                             @endif
                         </div>

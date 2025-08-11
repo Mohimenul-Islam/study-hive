@@ -83,11 +83,14 @@ class ResourceController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'course_name' => 'required|string|max:255',
-            'file' => 'required|file|mimes:pdf,pptx,jpg,png', // Only allow these file types
+            'file' => 'nullable|file|mimes:pdf,pptx,ppt,jpg,jpeg,png,gif,doc,docx|max:10240', // 10MB max
         ]);
 
-        // 2. Store the uploaded file and get its path
-        $filePath = $request->file('file')->store('resources', 'public');
+        // 2. Store the uploaded file and get its path (if file is provided)
+        $filePath = null;
+        if ($request->hasFile('file')) {
+            $filePath = $request->file('file')->store('resources', 'public');
+        }
 
         // 3. Create a new record in the database
         Resource::create([
@@ -130,7 +133,7 @@ class ResourceController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'course_name' => 'required|string|max:255',
-            'file' => 'nullable|file|mimes:pdf,pptx,jpg,png', // File is optional on update
+            'file' => 'nullable|file|mimes:pdf,pptx,ppt,jpg,jpeg,png,gif,doc,docx|max:10240', // 10MB max, file is optional on update
         ]);
 
         // Handle file upload if a new file is provided

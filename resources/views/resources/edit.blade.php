@@ -55,90 +55,93 @@
                 </x-form-group>
 
                 <!-- Current File Info -->
-                <x-form-group label="Current File">
-                    <div
-                        class="flex items-center p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-                        <div class="flex-shrink-0 mr-3">
-                            @php
-                                $extension = strtolower(pathinfo($resource->file_path, PATHINFO_EXTENSION));
-                            @endphp
-                            @if($extension === 'pdf')
-                                <svg class="w-8 h-8 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z"
-                                        clip-rule="evenodd"></path>
+                @if($resource->file_path)
+                    <x-form-group label="Current File">
+                        <div
+                            class="flex items-center p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                            <div class="flex-shrink-0 mr-3">
+                                @php
+                                    $extension = strtolower(pathinfo($resource->file_path, PATHINFO_EXTENSION));
+                                @endphp
+                                @if($extension === 'pdf')
+                                    <svg class="w-8 h-8 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                @elseif(in_array($extension, ['ppt', 'pptx']))
+                                    <svg class="w-8 h-8 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                @elseif(in_array($extension, ['doc', 'docx']))
+                                    <svg class="w-8 h-8 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                @elseif(in_array($extension, ['jpg', 'jpeg', 'png', 'gif']))
+                                    <svg class="w-8 h-8 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                @else
+                                    <svg class="w-8 h-8 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                @endif
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-900 dark:text-white">
+                                    {{ basename($resource->file_path) }}
+                                </p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 uppercase">{{ $extension }} file</p>
+                            </div>
+                            <a href="{{ asset('storage/' . $resource->file_path) }}" target="_blank"
+                                class="inline-flex items-center px-3 py-1.5 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-xs font-medium rounded-md hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors">
+                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                    </path>
                                 </svg>
-                            @elseif(in_array($extension, ['ppt', 'pptx']))
-                                <svg class="w-8 h-8 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z"
-                                        clip-rule="evenodd"></path>
-                                </svg>
-                            @elseif(in_array($extension, ['doc', 'docx']))
-                                <svg class="w-8 h-8 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z"
-                                        clip-rule="evenodd"></path>
-                                </svg>
-                            @elseif(in_array($extension, ['jpg', 'jpeg', 'png', 'gif']))
-                                <svg class="w-8 h-8 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
-                                        clip-rule="evenodd"></path>
-                                </svg>
-                            @else
-                                <svg class="w-8 h-8 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                                View
+                            </a>
+                        </div>
+                    </x-form-group>
+                @else
+                    <x-form-group label="Current File">
+                        <div
+                            class="flex items-center p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                            <div class="flex-shrink-0 mr-3">
+                                <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd"
                                         d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
                                         clip-rule="evenodd"></path>
                                 </svg>
-                            @endif
-                        </div>
-                        <div class="flex-1">
-                            <p class="text-sm font-medium text-gray-900 dark:text-white">
-                                {{ basename($resource->file_path) }}</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 uppercase">{{ $extension }} file</p>
-                        </div>
-                        <a href="{{ asset('storage/' . $resource->file_path) }}" target="_blank"
-                            class="inline-flex items-center px-3 py-1.5 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-xs font-medium rounded-md hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors">
-                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                </path>
-                            </svg>
-                            View
-                        </a>
-                    </div>
-                </x-form-group>
-
-                <!-- File Upload (Optional for Update) -->
-                <x-form-group label="Replace File (Optional)" :error="$errors->first('file')"
-                    helpText="Only upload a new file if you want to replace the existing one. Leave empty to keep the current file.">
-                    <div
-                        class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-lg hover:border-gray-400 dark:hover:border-gray-500 transition-colors @error('file') border-red-300 dark:border-red-600 @enderror">
-                        <div class="space-y-1 text-center">
-                            <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" stroke="currentColor"
-                                fill="none" viewBox="0 0 48 48">
-                                <path
-                                    d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                            <div class="flex text-sm text-gray-600 dark:text-gray-400">
-                                <label for="file"
-                                    class="relative cursor-pointer bg-white dark:bg-gray-800 rounded-md font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500 transition-colors">
-                                    <span>Upload a new file</span>
-                                    <input id="file" name="file" type="file" class="sr-only"
-                                        accept=".pdf,.pptx,.ppt,.jpg,.jpeg,.png,.gif,.doc,.docx">
-                                </label>
-                                <p class="pl-1">or drag and drop</p>
                             </div>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">
-                                PDF, PPTX, DOC, PNG, JPG, GIF up to 10MB
-                            </p>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                    No file attached</p>
+                                <p class="text-xs text-gray-400 dark:text-gray-500">You can upload a file below</p>
+                            </div>
                         </div>
-                    </div>
+                    </x-form-group>
+                @endif <!-- File Upload (Optional for Update) -->
+                <x-form-group label="Upload File (Optional)" :error="$errors->first('file')"
+                    helpText="Upload a file for this resource (optional). Only upload a new file if you want to replace the existing one or add one if none exists.">
+                    <input id="file" name="file" type="file" accept=".pdf,.pptx,.ppt,.jpg,.jpeg,.png,.gif,.doc,.docx"
+                        class="block w-full text-sm text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer bg-white dark:bg-gray-800 focus:border-blue-500 dark:focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all duration-200 @error('file') border-red-300 dark:border-red-600 @enderror
+                        file:mr-4 file:py-2.5 file:px-4 file:rounded-l-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 dark:file:bg-blue-900/30 dark:file:text-blue-400 hover:file:bg-blue-100 dark:hover:file:bg-blue-900/50 file:cursor-pointer">
+                    <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                        Leave empty to keep current file (if any). Supported formats: PDF, PPTX, DOC, PNG, JPG, GIF (max
+                        10MB)
+                    </p>
                 </x-form-group>
 
                 <!-- Submit Buttons -->
@@ -157,22 +160,4 @@
             </form>
         </x-card>
     </x-page-container>
-
-    @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const fileInput = document.getElementById('file');
-                const fileLabel = fileInput.parentNode;
-
-                fileInput.addEventListener('change', function (e) {
-                    const file = e.target.files[0];
-                    if (file) {
-                        fileLabel.innerHTML = `<span class="text-green-600 dark:text-green-400">Selected: ${file.name}</span>`;
-                    } else {
-                        fileLabel.innerHTML = '<span>Upload a new file</span>';
-                    }
-                });
-            });
-        </script>
-    @endpush
 </x-app-layout>
