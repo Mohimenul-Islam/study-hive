@@ -51,7 +51,7 @@ class DashboardController extends Controller
             'recent_resources' => Resource::where('user_id', $user->id)->where('created_at', '>=', now()->subDays(7))->count(),
         ];
 
-        return view('dashboard.index', [
+        return view('dashboard.index-new', [
             'user' => $user,
             'resources' => $resources,
             'courseNames' => $courseNames,

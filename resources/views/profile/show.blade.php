@@ -160,7 +160,13 @@
 
                                             <!-- Description -->
                                             <p class="text-gray-700 text-sm sm:text-base line-clamp-3">
-                                                {{ Str::limit($resource->description, 150) }}
+                                                {!! preg_replace_callback(
+                                                    '/(https?:\/\/[^\s<>"]+)/',
+                                                    function($matches) {
+                                                        return '<a href="' . $matches[1] . '" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 underline">External Link</a>';
+                                                    },
+                                                    e(Str::limit($resource->description, 150))
+                                                ) !!}
                                             </p>
 
                                             <!-- File preview/info -->

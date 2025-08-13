@@ -134,7 +134,13 @@
                         <!-- Full Description -->
                         <div class="prose max-w-none">
                             <p class="text-gray-700 text-base leading-relaxed">
-                                {{ $resource->description }}
+                                {!! preg_replace_callback(
+    '/(https?:\/\/[^\s<>"]+)/',
+    function ($matches) {
+        return '<a href="' . $matches[1] . '" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 underline">External Link</a>';
+    },
+    e($resource->description)
+) !!}
                             </p>
                         </div>
 
