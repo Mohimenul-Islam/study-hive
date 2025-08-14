@@ -25,7 +25,7 @@ class GoogleLoginController extends Controller
             }
 
 
-            $user = User::where('email', $googleUser->getEmail())->orWhere('google_id', $googleUser->getId())->withTrashed()->first();
+            $user = User::where('email', $googleUser->getEmail())->orWhere('google_id', $googleUser->getId())->first();
             if (!$user) {
 
 
@@ -44,9 +44,6 @@ class GoogleLoginController extends Controller
 
                 return redirect()->route('home')->with('success', 'You are now logged in!');
             } else {
-                if ($user->deleted_at) {
-                    $user->restore();
-                }
                 // Update google_id if not set
                 if (!$user->google_id) {
                     $user->update(['google_id' => $googleUser->getId()]);
