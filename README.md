@@ -113,18 +113,6 @@ This command will start:
 - Log viewer (Pail)
 - Vite development server with HMR
 
-## 📱 API Documentation
-
-StudyHive provides a comprehensive RESTful API. Check out the [API Contract](API_CONTRACT.md) for detailed endpoint documentation.
-
-### Key Endpoints
-
-- `POST /api/register` - User registration
-- `POST /api/login` - User authentication  
-- `GET /api/resources` - Fetch resources
-- `POST /api/resources` - Create new resource
-- `POST /api/resources/{id}/vote` - Vote on resources
-
 ## 🧪 Testing
 
 Run the test suite using Pest:
